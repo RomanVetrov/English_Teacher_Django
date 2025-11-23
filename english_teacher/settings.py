@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 # Authentication settings
 
 AUTH_USER_MODEL = "users.User"
+AXES_USERNAME_FORM_FIELD = "email"
 
 AUTHENTICATION_BACKENDS = [
     'axes.backends.AxesStandaloneBackend',

@@ -11,16 +11,35 @@
 
 <body>
     <header class="site-header">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
         <div class="container nav-container">
             <div class="logo">Polly English Teacher</div>
 
             <nav class="nav">
-                <a href="/">Главная</a>
-                <a href="/about/">Обо мне</a>
-                <a href="/life/">Моя жизнь</a>
-                <a href="/materials/">Материалы</a>
-                <a href="/contacts/">Контакты</a>
+                <a href="{% url 'home' %}">Главная</a>
+                <a href="{% url 'about' %}">Обо мне</a>
+                <a href="{% url 'life' %}">Моя жизнь</a>
+                <a href="{% url 'contacts' %}">Контакты</a>
+
+                {% if user.is_authenticated %}
+                    <!-- если пользователь вошёл -->
+                    <a href="{% url 'logout' %}">Выйти</a>
+                    <a href="#">Личный кабинет</a>
+                {% else %}
+                    <!-- если НЕ вошёл -->
+                    <a href="{% url 'login' %}">Вход</a>
+                    <a href="{% url 'register' %}">Регистрация</a>
+                    {% endif %}
             </nav>
+
         </div>
     </header>
 
