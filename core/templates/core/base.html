@@ -30,14 +30,15 @@
                 <a href="{% url 'contacts' %}">Контакты</a>
 
                 {% if user.is_authenticated %}
-                    <!-- если пользователь вошёл -->
-                    <a href="{% url 'logout' %}">Выйти</a>
+                    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link-button">Выйти</button>
+                    </form>
                     <a href="#">Личный кабинет</a>
                 {% else %}
-                    <!-- если НЕ вошёл -->
                     <a href="{% url 'login' %}">Вход</a>
                     <a href="{% url 'register' %}">Регистрация</a>
-                    {% endif %}
+                {% endif %} 
             </nav>
 
         </div>
@@ -49,7 +50,7 @@
 
     <footer class="site-footer">
         <div class="container">
-            © {{ year }}Polly English Teacher. Все права защищены.
+            © {% now "Y" %} Polly English Teacher. Все права защищены.
         </div>
     </footer>
 </body>

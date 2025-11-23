@@ -27,7 +27,13 @@ load_dotenv()
 SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = os.environ.get("DEBUG") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [] # TODO: заполнить в продакшене (домен сайта)
+# TODO: при деплое на сервер:
+# CSRF_TRUSTED_ORIGINS = ["https://yourdomain.com"]
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
 # Application definition
@@ -51,8 +57,8 @@ AUTH_USER_MODEL = "users.User"
 AXES_USERNAME_FORM_FIELD = "email"
 
 AUTHENTICATION_BACKENDS = [
-    'axes.backends.AxesStandaloneBackend',
-    'django.contrib.auth.backends.ModelBackend',
+    'axes.backends.AxesStandaloneBackend',  # Axes backend
+    'django.contrib.auth.backends.ModelBackend',  # стандартный Django
 ]
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -63,9 +69,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Axes settings (защита от брутфорса)
-AXES_FAILURE_LIMIT = 5
-AXES_COOLOFF_TIME = 1  # часы
-AXES_LOCKOUT_PARAMETERS = [["username", "ip_address"]]
+AXES_FAILURE_LIMIT = 5  # блокировка после 5 неудачных попыток
+AXES_COOLOFF_TIME = 1  # разблокировка через 1 час (в часах)
+AXES_LOCKOUT_PARAMETERS = [["email", "ip_address"]] # блокировка по паре email+IP
 
 
 
@@ -105,37 +111,23 @@ WSGI_APPLICATION = 'english_teacher.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get("DB_NAME"),
+        'USER': os.environ.get("DB_USER"),
+        'PASSWORD': os.environ.get("DB_PASSWORD"),
+        'HOST': os.environ.get("DB_HOST"),
+        'PORT': os.environ.get("DB_PORT"),
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -154,14 +146,3 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-AXES_FAILURE_LIMIT = 5  # блокировка после 5 неудачных попыток
-AXES_COOLOFF_TIME = 1  # разблокировка через 1 час (в часах)
-AXES_LOCKOUT_PARAMETERS = [["username", "ip_address"]] # блокировка по паре user+IP
-
-
-AUTHENTICATION_BACKENDS = [
-    'axes.backends.AxesStandaloneBackend',  # Axes backend
-    'django.contrib.auth.backends.ModelBackend',  # стандартный Django
-]
